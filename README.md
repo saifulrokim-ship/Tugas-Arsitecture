@@ -7,11 +7,13 @@ Dibangun dengan Laravel 13, Tailwind CSS 4, dan Vite 8. Antarmuka tersedia dalam
 ## Fitur
 
 ### Proyek
-- CRUD proyek (nama, organisasi, deskripsi, tanggal mulai) dengan *soft delete*.
+
+- CRUD proyek (nama, organisasi, deskripsi, tanggal mulai) dengan _soft delete_.
 - Halaman ringkasan: total durasi (hari kerja), tanggal mulai, perkiraan selesai, jumlah tugas, dan daftar tugas kritis.
 - Simpan seluruh proyek ke satu file JSON, lalu buka kembali kapan saja.
 
 ### Tugas
+
 - Struktur berjenjang (tugas induk dan sub-kegiatan) dengan operasi **indent / outdent** serta geser urutan naik/turun.
 - Durasi dalam hari kerja; **milestone** adalah tugas dengan durasi `0`.
 - Progres (0–100%), prioritas (low / medium / high / critical), dan deskripsi.
@@ -19,26 +21,31 @@ Dibangun dengan Laravel 13, Tailwind CSS 4, dan Vite 8. Antarmuka tersedia dalam
 - Tugas dapat ditugaskan ke beberapa anggota tim.
 
 ### Dependensi
-- Tipe **Finish-to-Start (FS)** dan **Start-to-Start (SS)** dengan **lag** hari kerja; nilai negatif berfungsi sebagai *lead*.
+
+- Tipe **Finish-to-Start (FS)** dan **Start-to-Start (SS)** dengan **lag** hari kerja; nilai negatif berfungsi sebagai _lead_.
 - Banyak predecessor diperbolehkan — tanggal mulai diambil dari batas yang paling akhir.
 - Dependensi melingkar ditolak dengan pesan yang menyebutkan rantai tugasnya.
 
 ### Kalender kerja & hari libur
+
 - Hari kerja dan akhir pekan dapat diatur per proyek (default Senin–Jumat).
 - Hari libur mendukung rentang tanggal, misalnya cuti bersama beberapa hari.
 - **Impor template hari libur nasional Indonesia** sekali klik, aman diulang tanpa membuat duplikat: hari libur tetap setiap tahun plus hari besar yang tanggalnya bergerak untuk 2025–2027.
 
 ### Visualisasi
+
 - **Gantt chart**: bar per tugas, penanda hari non-kerja, sorotan jalur kritis, dan filter per anggota tim.
 - **Diagram PERT**: jaringan ketergantungan dengan ES / EF / LS / LF dan total slack per kegiatan.
 - Render dilakukan di sisi klien dari data JSON yang dihasilkan `ScheduleCalculator`.
 
 ### Tim
+
 - Anggota tim dengan nama, kontak, peran, dan gaji.
 - **Gaji disimpan terenkripsi** di database dan dapat disembunyikan dari tampilan (preferensi per sesi).
 - Cuti anggota per rentang tanggal, plus peringatan bila cuti bentrok dengan jadwal tugas yang ditugaskan.
 
 ### Lain-lain
+
 - Impor proyek dari file ekspor; file rusak atau format asing ditolak dengan pesan jelas.
 - Perpindahan bahasa ID / EN yang disimpan di sesi.
 - Endpoint `GET /health` untuk pemeriksaan status aplikasi.
@@ -49,9 +56,9 @@ Logika penjadwalan ada di `app/Services/ScheduleCalculator.php` dan `app/Service
 
 1. Semua durasi dihitung dalam **hari kerja efektif** — akhir pekan dan hari libur dilewati.
 2. **Forward pass** menentukan Early Start dan Early Finish:
-   - FS: mulai = selesai(predecessor) + 1 hari kerja + lag.
-   - SS: mulai = mulai(predecessor) + lag.
-   - Tugas tanpa predecessor dan tanpa tanggal manual mulai pada tanggal mulai proyek.
+    - FS: mulai = selesai(predecessor) + 1 hari kerja + lag.
+    - SS: mulai = mulai(predecessor) + lag.
+    - Tugas tanpa predecessor dan tanpa tanggal manual mulai pada tanggal mulai proyek.
 3. Tanggal mulai manual tidak boleh lebih awal dari batas dependensinya.
 4. **Backward pass** menentukan Late Start, Late Finish, dan total slack; tugas dengan `slack <= 0` ditandai **kritis**.
 5. Slack tugas induk = slack terkecil di antara sub-kegiatannya.
@@ -98,12 +105,12 @@ Satu perintah ini menjalankan tiga proses sekaligus: HTTP server (`http://127.0.
 
 Perintah lain yang sering dipakai:
 
-| Perintah | Kegunaan |
-| --- | --- |
-| `php artisan test` | Menjalankan seluruh test suite |
-| `npm run build` | Build aset untuk produksi |
-| `vendor/bin/pint` | Merapikan format kode PHP |
-| `php artisan migrate:fresh --seed` | Reset database dari nol |
+| Perintah                           | Kegunaan                       |
+| ---------------------------------- | ------------------------------ |
+| `php artisan test`                 | Menjalankan seluruh test suite |
+| `npm run build`                    | Build aset untuk produksi      |
+| `vendor/bin/pint`                  | Merapikan format kode PHP      |
+| `php artisan migrate:fresh --seed` | Reset database dari nol        |
 
 ## Struktur proyek
 
@@ -131,27 +138,42 @@ Ekspor menghasilkan JSON dengan penanda format berikut:
 
 ```json
 {
-  "format": "proyekta-project",
-  "version": 1,
-  "exported_at": "2026-10-24T06:00:00+00:00",
-  "project": {
-    "name": "Pembangunan Gedung A",
-    "organization": "PT Contoh",
-    "description": "Proyek percontohan",
-    "start_date": "2026-11-02"
-  },
-  "calendar": { "workdays": [1, 2, 3, 4, 5], "weekend_days": [6, 7] },
-  "holidays": [{ "date": "2026-12-25", "description": "Hari Raya Natal" }],
-  "tasks": [
-    { "id": 1, "parent_id": null, "name": "Persiapan", "start_date": null, "duration": 5, "priority": "high", "sort_order": 0 }
-  ],
-  "dependencies": [
-    { "predecessor_id": 1, "successor_id": 2, "type": "FS", "lag": 0 }
-  ],
-  "resources": [
-    { "id": 1, "name": "Budi", "contact": "budi@example.com", "role": "Site Engineer", "salary": 9000000, "leaves": [] }
-  ],
-  "assignments": [{ "task_id": 1, "resource_id": 1 }]
+    "format": "proyekta-project",
+    "version": 1,
+    "exported_at": "2026-10-24T06:00:00+00:00",
+    "project": {
+        "name": "Pembangunan Gedung A",
+        "organization": "PT Contoh",
+        "description": "Proyek percontohan",
+        "start_date": "2026-11-02"
+    },
+    "calendar": { "workdays": [1, 2, 3, 4, 5], "weekend_days": [6, 7] },
+    "holidays": [{ "date": "2026-12-25", "description": "Hari Raya Natal" }],
+    "tasks": [
+        {
+            "id": 1,
+            "parent_id": null,
+            "name": "Persiapan",
+            "start_date": null,
+            "duration": 5,
+            "priority": "high",
+            "sort_order": 0
+        }
+    ],
+    "dependencies": [
+        { "predecessor_id": 1, "successor_id": 2, "type": "FS", "lag": 0 }
+    ],
+    "resources": [
+        {
+            "id": 1,
+            "name": "Budi",
+            "contact": "budi@example.com",
+            "role": "Site Engineer",
+            "salary": 9000000,
+            "leaves": []
+        }
+    ],
+    "assignments": [{ "task_id": 1, "resource_id": 1 }]
 }
 ```
 
@@ -173,3 +195,8 @@ Test suite mencakup perhitungan kalender kerja (`tests/Unit/WorkCalendarTest.php
 ## Lisensi
 
 Dirilis di bawah lisensi MIT.
+
+## gambar tangkapan layar
+
+![alt text](<Screenshot 2026-10-24 at 14-37-07 Pembangunan Menara Jaringan · Proyekta.png>)
+![alt text](<Screenshot 2026-10-24 at 14-37-19 Gantt Chart · Proyekta.png>)
